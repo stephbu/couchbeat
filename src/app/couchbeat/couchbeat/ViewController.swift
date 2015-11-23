@@ -11,16 +11,18 @@ import AVFoundation
 
 class ViewController: UIViewController {
 
-    var synth = AVSpeechSynthesizer()
+    let synth = AVSpeechSynthesizer()
+    
+    weak var timer : NSTimer?
     
     func ViewController() {
-    
-        synth.
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.view.backgroundColor = UIColor(red:112, green:12, blue:12, alpha:255)
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,17 +31,27 @@ class ViewController: UIViewController {
     }
 
     @IBAction func OnStartStop(sender: StartStopButton) {
-        let utterance = AVSpeechUtterance(string: "ten seconds")
+
+        if(timer == nil)
+        {
+            timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "elapsed", userInfo: nil, repeats: true)
+        }
+        else
+        {
+            timer?.invalidate()
+            timer = nil
+        }
+    }
+
+    @IBAction func Dontslowdown(sender: UIButton) {
+        let utterance = AVSpeechUtterance(string: "wrap it up")
         utterance.pitchMultiplier = 1.3
         utterance.rate = AVSpeechUtteranceMinimumSpeechRate + ((AVSpeechUtteranceMaximumSpeechRate - AVSpeechUtteranceMinimumSpeechRate) * 0.55)
         synth.speakUtterance(utterance)
     }
+    
+    func elapsed() {
 
-    @IBAction func Dontslowdown(sender: UIButton) {
-        let utterance = AVSpeechUtterance(string: "keep it up")
-        utterance.pitchMultiplier = 1.3
-        utterance.rate = AVSpeechUtteranceMinimumSpeechRate + ((AVSpeechUtteranceMaximumSpeechRate - AVSpeechUtteranceMinimumSpeechRate) * 0.55)
-        synth.speakUtterance(utterance)
     }
 }
 
